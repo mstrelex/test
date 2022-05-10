@@ -31,7 +31,10 @@ jobs:
         with:
           path: artifacts
           
-      - run: echo ARTIFACTS=$(find artifacts -type f -follow -print ) >> $GITHUB_ENV
+      - run: |
+          echo 'ARTIFACTS<<EOF' >> $GITHUB_ENV
+          find artifacts -type f -follow -print >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
           
       - uses: rickstaa/action-create-tag@v1
         with:
