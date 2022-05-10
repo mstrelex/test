@@ -27,6 +27,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: artifacts
+          
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          tag: "${{ github.run_number }}"
+          message: "Latest release"
       
       - name: Release
         uses: softprops/action-gh-release@v1
