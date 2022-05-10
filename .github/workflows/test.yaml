@@ -31,6 +31,8 @@ jobs:
         with:
           path: artifacts
           
+      - run: echo ARTIFACTS=$(find artifacts -type f -follow -print ) >> $GITHUB_ENV
+          
       - uses: rickstaa/action-create-tag@v1
         with:
           tag: "${{ github.run_number }}"
@@ -40,6 +42,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "${{ github.run_number }}"
-          files: |
-            artifacts/test1.txt
-            artifacts/test2.txt
+          files: ${{ env.ARTIFACTS }}
