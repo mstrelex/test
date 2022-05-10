@@ -1,0 +1,35 @@
+name: Test
+
+on:
+  push:
+
+jobs:
+
+  test:
+
+    steps:
+
+      - run: echo test1 > test1.txt
+      - run: echo test2 > test2.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test1
+          path: test1.txt
+          
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test2
+          path: test2.txt          
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+      
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            artifacts/test1.txt
+            artifacts/test2.txt
