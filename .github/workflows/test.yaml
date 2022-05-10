@@ -13,27 +13,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - run: echo test1 > test1.txt
-      - run: echo test2 > test2.txt
-
+      - run: mkdir -p artifact-1 && echo test1 > artifact-1/test1.txt
+      - run: mkdir -p artifact-2 && echo test2 > artifact-2/test2.txt
+      
       - uses: actions/upload-artifact@v3
         with:
-          name: test1
-          path: test1.txt
+          name: artifact-1
+          path: artifact-1
           
       - uses: actions/upload-artifact@v3
         with:
-          name: test2
-          path: test2.txt          
+          name: artifact-2
+          path: artifact-2        
 
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
           path: artifacts
           
+      - name: Zip Again
+        run: |
+          mkdir assets
+          cd artifacts
+          for i in */; do (cd "$i"; zip -r "../../assets/${i%/}.zip" .); done
+          cd -
+          
       - run: |
           echo 'ARTIFACTS<<EOF' >> $GITHUB_ENV
-          find artifacts -type f -follow -print >> $GITHUB_ENV
+          find assets -type f -follow -print >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           
       - uses: rickstaa/action-create-tag@v1
